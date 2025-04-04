@@ -1,0 +1,100 @@
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+.city{
+  display: flex;
+  position: absolute;
+  justify-content: space-between;
+  top: 3%;
+  gap: 5%;
+  width: 100%;
+}
+.city Button{
+  border: 0;
+  text-align: center;
+  position: relative;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 15vw;
+  justify-content: center;
+  align-items: center;
+}
+.city Button img{
+  max-width: 128px;
+  width: 10vw;
+}
+.city Button span{
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  position: absolute;
+  font-size: 1.2rem;
+  bottom: -50px;
+  width: 100%;
+}
+
+.w_container {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 0 50px;
+  border-radius: 20px;
+  width: 100%;
+}
+.w_container *{
+  padding: 3vw 0;
+}
+.place_name{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 4vw;
+}
+.temp{
+  font-size: 3vw;
+  text-align: right;
+}
+.weather{
+  font-size: 3vw;
+}
+@media (max-width: 770px) {
+  .city Button span{
+    font-size: 0.95rem;
+    bottom: -40px;
+  }
+  .place_name{
+    font-size: 7vw;
+  }
+  .weather{
+    font-size: 7vw;
+  }
+  .temp{
+    font-size: 5vw; 
+  }
+
+}
+@media (min-width: 1500px) {
+  .w_container{
+    margin-top: 10vw;
+  }
+}
+@media (max-width: 650px) {
+  .city{
+    padding: 0 10px;
+  }
+  .city Button span{
+    font-size: 0.8rem;
+  }
+}
+@media (max-width: 520px) {
+  .city Button span{
+    font-size: 0.7rem;
+  }
+}
