@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import WeatherBox from './component/WeatherBox';
 import WeatherButton from './component/WeatherButton';
+import { ClipLoader } from 'react-spinners';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -15,6 +16,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
+
+  const cities = [
+    { name: 'Seoul', img: 'https://cdn-icons-png.flaticon.com/128/4481/4481011.png' },
+    { name: 'New York', img: 'https://cdn-icons-png.flaticon.com/128/4717/4717631.png' },
+    { name: 'Tokyo', img: 'https://cdn-icons-png.flaticon.com/128/5971/5971982.png' },
+    { name: 'London', img: 'https://cdn-icons-png.flaticon.com/128/533/533445.png' },
+  ];
+  const [city, setCity] = useState('');
 
   const weatherBackgrounds = {
     'clear sky': 'url("https://cdn.pixabay.com/photo/2017/03/05/01/22/clouds-2117447_1280.jpg")',
@@ -31,6 +40,10 @@ function App() {
 
   const [weather, setWeather] = useState(null); // #1
 
+  const [loading, setLoading] = useState(true);
+
+  const [apiError, setAPIError] = useState("");
+
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       let lat = position.coords.latitude;
@@ -39,18 +52,43 @@ function App() {
     });
   }
 
-  const OPENWEATHER_API_KEY =import.meta.env.VITE_OPENWEATHER_API_KEY;
+  const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
   const getWeatherByCurrentLocation = async (lat, lon) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
-    let response = await fetch(url);
-    let data = await response.json();
-    setWeather(data);
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+      setLoading(true);
+      let response = await fetch(url);
+      let data = await response.json();
+      setWeather(data);
+      setLoading(false);
+    } catch (err) {
+      setAPIError(err.message);
+      setLoading(false);
+    }
   };
 
+  const getWeatherByCity = async () => {
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHER_API_KEY}&units=metric`;
+      setLoading(true);
+      let response = await fetch(url);
+      let data = await response.json();
+      setWeather(data);
+      setLoading(false);
+    } catch (err) {
+      setAPIError(err.message);
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    getCurrentLocation()
-  }, []);
+    if (city == "") {
+      getCurrentLocation()
+    } else {
+      getWeatherByCity()
+    }
+  }, [city]);
 
   const weatherMain = weather?.weather?.[0]?.description;
   const backgroundStyle = {
@@ -64,10 +102,18 @@ function App() {
 
   return (
     <div style={backgroundStyle}>
-      <div className='container'>
-        <WeatherBox weather={weather} />
-        <WeatherButton />
-      </div>
+      {loading ? (
+        <div className='container'>
+          <ClipLoader color="#ffffff" loading={loading} size={150} />
+        </div>
+      ) : !apiError ? (
+        <div className='container'>
+          <WeatherBox weather={weather} />
+          <WeatherButton cities={cities} setCity={setCity} selectedCity={city} />
+        </div>
+      ) : (
+        apiError
+      )}
     </div>
   )
 }
