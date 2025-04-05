@@ -39,8 +39,10 @@ function App() {
     });
   }
 
+  const OPENWEATHER_API_KEY =import.meta.env.VITE_OPENWEATHER_API_KEY;
+
   const getWeatherByCurrentLocation = async (lat, lon) => {
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=917b877c0fa2aa50343450ab8c91fc9a&units=metric`;
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
     let response = await fetch(url);
     let data = await response.json();
     setWeather(data);
